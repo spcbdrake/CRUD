@@ -1,0 +1,17 @@
+<html>
+<body>
+Welcome {{username}}!
+<form action="add-place" method="post">
+    <input type="text" placeholder="Add location" name="location">
+    <input type="text" placeholder="Year visited" name="year">
+    <button type="submit">Submit</button>
+</form>
+<form action="delete-location" method="post">
+    <input type="text" placeholder="Location #" name="locid"/>
+    <button type="submit">Delete</button>
+</form>
+{{#places}}
+{{id}}. {{location}}-{{year}} <br>
+{{/places}}
+</body>
+</html>
