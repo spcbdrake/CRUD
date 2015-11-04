@@ -11,6 +11,7 @@ import java.util.HashMap;
 public class Main {
 
     public static void main(String[] args) {
+        HashMap<String, User> users = new HashMap();
         ArrayList<Place> places = new ArrayList();
 
         Spark.get(
@@ -27,6 +28,36 @@ public class Main {
                     return new ModelAndView(m, "loggedin.html");
                 }),
                 new MustacheTemplateEngine()
+        );
+
+
+        Spark.post(
+                "/login",
+                ((request, response) -> {
+                    String username = request.queryParams("username");
+                    String password = request.queryParams("password");
+
+                    if (username.isEmpty() || (password.isEmpty())) {
+                        Spark.halt(403);
+                    }
+
+                    User user = users.get(username);
+                    if (user ==  null) {
+                        user = new User();
+                        user.password = password;
+                        users.put(username, user);
+                    }
+                    else if (!password.equals(user.password)) {
+                        Spark.halt(403);
+                    }
+
+                    Session session = request.session();
+                    session.attribute("username", username);
+
+                    response.redirect(request.headers("Referer"));
+                    return "";
+                })
+
         );
 
 
